@@ -13,8 +13,14 @@ router.get('/v1/test',(req,res)=> {
             }
     };
     res.json({data});
+    
 });
 
+router.post('/v1/test',(req,res)=> {
+    console.log(req.body);
+    res.send('👌👍')
+}
+);
 
 
 
