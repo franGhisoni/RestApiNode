@@ -16,6 +16,7 @@ app.use(cors());
 app.use(require('./routes/test'));
 app.use(require('./routes/getAll'));
 app.use(require('./routes/login'));
+app.use(require('./routes/Register'));
 
 //starting
 const server = app.listen(PORT, () => {
