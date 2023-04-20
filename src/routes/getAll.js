@@ -10,6 +10,7 @@ router.get('/v1/getall', async (req, res) => {
       const { data } = await sdk.listContacts();
       console.log(data);
       res.send(data); // Agrega esta línea si deseas devolver los datos al cliente
+      
     } catch (err) {
       console.error(err);
       res.status(500).send({ error: err.message }); // Agrega esta línea para manejar errores
