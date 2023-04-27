@@ -19,6 +19,7 @@ app.use(require('./routes/login'));
 app.use(require('./routes/loginV2'));
 app.use(require('./routes/Register'));
 app.use(require('./routes/getAllProducto'));
+app.use(require('./routes/getAllFacturas'));
 
 //starting
 const server = app.listen(PORT, () => {

@@ -8,7 +8,7 @@
     "dev": "nodemon src/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "https://github.com/franGhisoni",
   "license": "ISC",
   "dependencies": {
     "api": "^5.0.8",
