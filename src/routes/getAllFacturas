@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router= Router();
 const sdk = require('api')('@holded/v1.0#3cm531nlbw08qsz');
-
+const {userDTO} = require('./loginV2');
 
 router.get('/v1/getallFacturas', async (req, res) => {
 
@@ -17,14 +17,14 @@ try{
       listaFacturas.push(factura); // Agregar cada producto a la lista
     }
 const response = new Object();
-
+response["product"]= listaFacturas[0].products[0].name;
 response["total"]= listaFacturas[0].total;
-response["amount"]= listaFacturas[0].paymentsDetail[0].amount;
-response["cantFacturas"] = Object.keys(listaFacturas[0].paymentsDetail).length;
+// response["amount"]= listaFacturas[0].paymentsDetail[0].amount;
+// response["cantFacturas"] = listaFacturas[0].paymentsDetail.length;
 
-    res.status(201).send(response); // Devolver la lista de productos
-  
-
+    res.status(201).send(data); // Devolver la lista de productos
+    // res.status(201).send(listaFacturas[0].products[0].name);
+    console.log(userDTO.getUser)
 }catch (error){
     console.log(error);
     res.status(500)

@@ -1,8 +1,7 @@
-
-
 const { Router } = require('express');
 const router= Router();
 const sdk = require('api')('@holded/v1.0#3cm531nlbw08qsz');
+const User = require('../models/user')
 
 router.get('/v2/login', async (req, res) => {
 
@@ -18,53 +17,37 @@ router.get('/v2/login', async (req, res) => {
       res.status(401).send({ error: 'Credenciales inválidas' });
       return;
     }else {
+      try {
+        let { data } = await sdk.listProducts();
+        const listaProductos = []; // Crear una lista vacía
+        let productsOwn=[];
 
-
-    try {
-
-      let { data } = await sdk.listProducts();
-
-      const listaProductos = []; // Crear una lista vacía
-      let productsOwn=[];
-
-      for (const producto of data) {
-        listaProductos.push(producto); // Agregar cada producto a la lista
-        if(producto.contactId.$oid=== user.id){
-            productsOwn.push(producto.name);
+        for (const producto of data) {
+          listaProductos.push(producto); // Agregar cada producto a la lista
+          if(producto.contactId.$oid=== user.id){
+              productsOwn.push(producto.name);
+          }
         }
+        user.productos = productsOwn; 
+
+        let userDTO = new Object();
+        userDTO["name"]= user.name;
+        userDTO["email"]= user.email;
+        userDTO["mobile"]= user.mobile;
+        userDTO["id"]= user.id;
+        userDTO["productos"]= productsOwn;
+
+        console.log("user DTO:")
+        console.log(userDTO);
+
+        res.status(201).send(userDTO); // Devolver la lista de productos
+        module.exports = { router, userDTO };
+
+      } catch (err) {
+        console.error(err);
+        res.status(500).send({ error: err.message }); 
       }
-      user.productos = productsOwn; 
-    //   console.log(user);
-
-    let userDTO = new Object();
-
-    userDTO["name"]= user.name;
-    userDTO["email"]= user.email;
-    userDTO["mobile"]= user.mobile;
-    userDTO["id"]= user.id;
-    userDTO["productos"]= productsOwn;
-    console.log("user DTO:")
-    console.log(userDTO);
-      res.status(201).send(userDTO); // Devolver la lista de productos
-      
-
-
-    } catch (err) {
-      console.error(err);
-      res.status(500).send({ error: err.message }); 
     }
-    
-    
-
-
-  
-    
-
-
-}
-  });
-
-
-
+});
 
 module.exports = router;
