@@ -12,7 +12,9 @@
   "license": "ISC",
   "dependencies": {
     "api": "^5.0.8",
+    "axios": "^1.4.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mercadopago": "^1.5.15",
     "morgan": "^1.10.0",
