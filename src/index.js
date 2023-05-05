@@ -12,53 +12,6 @@ const PORT = 8080;
 
 
 
-//MERCADOPAGO (por el momento voy a hacer todo aca mismo por que asi esta en el ejemplo de mercado apgo)
-
-
-//Configuracion MercadoPago 
-mercadopago.configure({
-	access_token: "<ACCESS_TOKEN>",
-});
-
-
-// app.use(express.static("../../client/html-js"));
-
-app.post("/create_preference", (req, res) => {
-
-	let preference = {
-		items: [
-			{
-				title: req.body.description,
-				unit_price: Number(req.body.price),
-				quantity: Number(req.body.quantity),
-			}
-		],
-		back_urls: {
-			"success": "http://localhost:8080/feedback",
-			"failure": "http://localhost:8080/feedback",
-			"pending": "http://localhost:8080/feedback"
-		},
-		auto_return: "approved",
-	};
-
-	mercadopago.preferences.create(preference)
-		.then(function (response) {
-			res.json({
-				id: response.body.id
-			});
-		}).catch(function (error) {
-			console.log(error);
-		});
-});
-
-app.get('/feedback', function (req, res) {
-	res.json({
-		Payment: req.query.payment_id,
-		Status: req.query.status,
-		MerchantOrder: req.query.merchant_order_id
-	});
-});
-
 
 
 
@@ -100,3 +53,77 @@ server.on('error', (error) => {
         console.log(`Server listening on port ${nextPort}`);
     });
 });
+
+
+//MERCADOPAGO (por el momento voy a hacer todo aca mismo por que asi esta en el ejemplo de mercado apgo)
+
+
+//Configuracion MercadoPago 
+
+// credenciales de prueba:
+// ASSET (it@asset)
+// credencial  public key:  "TEST-026812a7-4811-43d1-8f09-8207c13823a5"
+// credencial  Acces Token: TEST-6453243717102029-050120-8e42db516068f5814f7146cefe6696b4-1362723906
+
+// Produccion
+// public key: APP_USR-cea272c1-a889-4a00-8d37-6f86ba43adb1
+// Access token: APP_USR-6453243717102029-050120-86625470ed742e0c3a8dfdfa709ade8a-1362723906
+
+// Credenciales de prueba:
+
+// Test user 
+// test_user_1617378711@testuser.com
+// credencial  public key:  "TEST-8cc0de02-11c6-4f51-86f9-5243bcc0b1cd"
+// credencial  Acces Token: TEST-5990004718573364-050309-6f5ddb7d13b533596d97451683dcf03e-1365118455
+
+// Produccion
+
+// Publick key: "APP_USR-d1d798ac-ada1-4e7e-8ab8-512fe38520a4"
+// Access token: APP_USR-5990004718573364-050309-e155277ff5747f15411c67de313903fd-1365118455
+
+// Client Secret: oPB0PWcUBp0cTl9WzzqxW4XJJOjBCiok
+mercadopago.configure({
+	access_token: "TEST-5990004718573364-050309-6f5ddb7d13b533596d97451683dcf03e-1365118455", //acces de prueba test user 1
+});
+
+
+// app.use(express.static("../../client/html-js"));
+
+app.post("/create_preference", (req, res) => {
+    console.log(req.body)
+	let preference = {
+		items: [
+			{
+				title: req.body.description,
+				unit_price: Number(req.body.price),
+				quantity: Number(req.body.quantity),
+			}
+		],
+		back_urls: {
+			"success": "http://localhost:8080/feedback",
+			"failure": "http://localhost:8080/feedback",
+			"pending": "http://localhost:8080/feedback"
+		},
+		auto_return: "approved",
+	};
+
+	mercadopago.preferences.create(preference)
+		.then(function (response) {
+			res.json({
+				id: response.body.id
+			});
+            console.log(response.body.id)
+		}).catch(function (error) {
+			console.log(error);
+		});
+});
+
+app.get('/feedback', function (req, res) {
+	res.json({
+		Payment: req.query.payment_id,
+		Status: req.query.status,
+		MerchantOrder: req.query.merchant_order_id
+	});
+});
+
+
