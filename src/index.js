@@ -12,7 +12,11 @@ const PORT = 8080;
 
 
 
-
+const path = require('path');
+const filePath = path.join(__dirname, 'index.html');
+app.get("/", function (req, res) {
+	res.status(200).sendFile(filePath);
+});
 
 
 
