@@ -101,8 +101,8 @@ app.post("/create_preference", (req, res) => {
 		],
 		back_urls: {
 			"success": "http://localhost:8080/feedback",
-			"failure": "http://localhost:8080/feedback",
-			"pending": "http://localhost:8080/feedback"
+			"failure": "http://localhost:3000/feedback",
+			"pending": "http://localhost:3000/feedback"
 		},
 		auto_return: "approved",
 	};
@@ -112,18 +112,21 @@ app.post("/create_preference", (req, res) => {
 			res.json({
 				id: response.body.id
 			});
-            console.log(response.body.id)
+            console.log(response.body)
 		}).catch(function (error) {
 			console.log(error);
 		});
 });
 
 app.get('/feedback', function (req, res) {
-	res.json({
-		Payment: req.query.payment_id,
-		Status: req.query.status,
-		MerchantOrder: req.query.merchant_order_id
-	});
+	console.log('req.query');
+	console.log(req.query);
+	res.redirect(`http://localhost:3000/feedback?status=${req.query.status}`)
+	// res.json({
+	// 	Payment: req.query.payment_id,
+	// 	Status: req.query.status,
+	// 	MerchantOrder: req.query.merchant_order_id
+	// });
 });
 
 
