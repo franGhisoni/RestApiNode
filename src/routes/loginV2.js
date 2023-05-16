@@ -18,17 +18,32 @@ router.get('/v2/login', async (req, res) => {
       return;
     }else {
       try {
-        let { data } = await sdk.listProducts();
-        const listaProductos = []; // Crear una lista vacía
+        let { data } = await sdk.listDocuments({docType: 'invoice'});
+        const listaProductos = []; // Crear una lista vacía de FACTURAS 
         let productsOwn=[];
+        let servicesOwn = [];
+        console.log("data[0]")
+        console.log(JSON.parse(data))
+        console.log("fin de data[0]")
 
-        for (const producto of data) {
+        for (const producto of JSON.parse(data)) {
           listaProductos.push(producto); // Agregar cada producto a la lista
-          if(producto.contactId.$oid=== user.id){
-              productsOwn.push(producto.name);
+
+          if (producto.contact === user.id) {
+            producto.products.forEach((product) => {
+              if (product.serviceId) {
+                servicesOwn.push(product);
+              } else {
+                productsOwn.push(product.name);
+              }
+              });
           }
         }
-        user.productos = productsOwn; 
+        
+        console.log("productsOwn");
+        console.log(productsOwn);
+        // console.log("listaProductos");
+        // console.log(listaProductos);
 
         let userDTO = new Object();
         userDTO["name"]= user.name;
@@ -36,6 +51,8 @@ router.get('/v2/login', async (req, res) => {
         userDTO["mobile"]= user.mobile;
         userDTO["id"]= user.id;
         userDTO["productos"]= productsOwn;
+        userDTO['password']=user.notes[0].description
+        userDTO['servicios']=servicesOwn;
 
         console.log("user DTO:")
         console.log(userDTO);

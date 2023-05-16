@@ -24,7 +24,8 @@ response["total"]= listaFacturas[0].total;
 
     res.status(201).send(data); // Devolver la lista de productos
     // res.status(201).send(listaFacturas[0].products[0].name);
-    console.log(userDTO.getUser)
+    console.log(userDTO); // Acceder al objeto userDTO
+    console.log(userDTO.name); // Acceder a una propiedad específica de
 }catch (error){
     console.log(error);
     res.status(500)

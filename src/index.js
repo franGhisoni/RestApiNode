@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 const morgan = require('morgan');
 const mercadopago = require('mercadopago');
-
+const sdk = require('api')('@holded/v1.0#3cm531nlbw08qsz');
 // Configuración del puerto
 const PORT = 8080;
 
@@ -92,9 +92,15 @@ mercadopago.configure({
 
 
 // app.use(express.static("../../client/html-js"));
-
+let userId;
+let date;
+let products= [];
+let payment_id;
 app.post("/create_preference", (req, res) => {
-    console.log(req.body)
+	
+    console.log(req.body);
+    console.log('req.body stringify\n\n\n');
+    console.log(JSON.stringify(req.body));
 	let preference = {
 		items: [
 			{
@@ -108,7 +114,8 @@ app.post("/create_preference", (req, res) => {
 			"failure": "http://localhost:3000/feedback",
 			"pending": "http://localhost:3000/feedback"
 		},
-		auto_return: "approved",
+		auto_return: "all",//approved, all deberia ser automatico
+		// notification_url: "http://localhost:3000/feedback",
 	};
 
 	mercadopago.preferences.create(preference)
@@ -120,6 +127,10 @@ app.post("/create_preference", (req, res) => {
 		}).catch(function (error) {
 			console.log(error);
 		});
+
+		userId = req.body.user.id;
+		payment_id = req.body.payment_id;
+
 });
 
 app.get('/feedback', function (req, res) {
@@ -131,6 +142,10 @@ app.get('/feedback', function (req, res) {
 	// 	Status: req.query.status,
 	// 	MerchantOrder: req.query.merchant_order_id
 	// });
+	//IMPACTO CON HOLDED
+	sdk.auth('c1e86f21bcc5fdedc6c36bd30cb5b596');
+
+
 });
 
 
