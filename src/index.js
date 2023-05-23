@@ -37,8 +37,9 @@ app.use(require('./routes/getAll'));//contactos
 app.use(require('./routes/login'));
 app.use(require('./routes/loginV2'));
 app.use(require('./routes/getAllProducto'));
+app.use(require('./routes/getAllServicio'));
 app.use(require('./routes/getAllFacturas'));
-
+app.use(require('./routes/uptadeUser'));
 //starting
 const server = app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
@@ -114,7 +115,7 @@ app.post("/create_preference", (req, res) => {
 			"failure": "http://localhost:3000/feedback",
 			"pending": "http://localhost:3000/feedback"
 		},
-		auto_return: "all",//approved, all deberia ser automatico
+		auto_return: "approved",//approved, all deberia ser automatico
 		// notification_url: "http://localhost:3000/feedback",
 	};
 

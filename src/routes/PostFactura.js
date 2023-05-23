@@ -2,22 +2,80 @@ const { Router } = require('express');
 const router= Router();
 const sdk = require('api')('@holded/v1.0#3cm531nlbw08qsz');
 const user = require("./loginV2");
+
+
+
 router.post('/v1/venta', async (req, res) => {
+    console.log(req.body)
     sdk.auth('c1e86f21bcc5fdedc6c36bd30cb5b596');
+
+
     
+    // const { data } = await sdk.listProducts();
+    
+    // const listaProductos = []; 
+
+    // for (const producto of data) {
+    //     listaProductos.push(producto); // Agregar cada producto a la lista
+    // }
+
+
+    const { data }  = await sdk.listServices();
+
+    const listaServicios= [];
+
+    for (const servicio of data) {
+        listaServicios.push(servicio); // Agregar cada producto a la lista
+    }
+
+
     if(req.body){
+        console.log(req.body);
+
         const fechaActual = new Date();
         const fechaUnix = Math.floor(fechaActual.getTime() / 1000);
-        console.log(req.body);
-        // sdk.createDocument({
-        //     items: [{sku:req.body.sku}],
-        //     applyContactDefaults: true,
-        //     contactId: req.body.user.id,
-        //     date: fechaUnix,
-        //   }, {docType: 'docType'}).then(({ data }) => console.log(data)).catch(err => console.error(err));
+        
+        let locker = null;
+        if(req.body.storage==="Grande"){
+            locker = "64662AB670EB6571F10A6942"
+        }
+        else if(req.body.storage==="Mediano"){
+            locker = "64662A98C275900011057387"
+        }
+        else{
+            locker = "64662A7C6B56EB8ADC009299"
+        }
+        
 
-        res.status(201).json({titulo : 'Post Facturas con exito👌👍',
-                            valor: 69});
+
+        sdk.createDocument({
+            items: [
+                {
+                    sku: req.body.sku
+                },
+                {
+                    serviceId: locker,
+                    units:1,
+                },
+                {
+                    serviceId:"645D044E23E518E60F0135A3", //SUM
+                    units: req.body.sum,
+                },
+                {
+                    serviceId:"64662B54CA7D9D6A830593AE", //KINDER
+                    units: req.body.guarderia,
+                },
+                {
+                    serviceId:"646629D3E5CA046AA701BA42", //COWORKING
+                    units: 0,
+                }
+            ],
+            applyContactDefaults: true,
+            contactId: req.body.user.id,
+            date: fechaUnix,
+          }, {docType: 'invoice'}).then(({ data }) => console.log(data)).catch(err => console.error(err));
+
+        res.status(201).json({titulo : 'Post Facturas con exito👌👍'});
     // res.send(user.getUser);
     // console.log("se ejecuto postfact")
     // console.log(user.getUser.email);
@@ -25,5 +83,6 @@ router.post('/v1/venta', async (req, res) => {
     else{
         res.status(400).send({ error: 'faltan datos requeridos' });
     }
+    
 });
 module.exports = router;

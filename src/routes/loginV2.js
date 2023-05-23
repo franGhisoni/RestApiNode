@@ -26,11 +26,11 @@ router.get('/v2/login', async (req, res) => {
         console.log(JSON.parse(data))
         console.log("fin de data[0]")
 
-        for (const producto of JSON.parse(data)) {
-          listaProductos.push(producto); // Agregar cada producto a la lista
+        for (const factura of JSON.parse(data)) {
+          listaProductos.push(factura); // Agregar cada producto a la lista
 
-          if (producto.contact === user.id) {
-            producto.products.forEach((product) => {
+          if (factura.contact === user.id) {
+            factura.products.forEach((product) => {
               if (product.serviceId) {
                 servicesOwn.push(product);
               } else {
