@@ -40,6 +40,8 @@ app.use(require('./routes/getAllProducto'));
 app.use(require('./routes/getAllServicio'));
 app.use(require('./routes/getAllFacturas'));
 app.use(require('./routes/uptadeUser'));
+app.use(require('./routes/getFacturaPDF'));
+
 //starting
 const server = app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
