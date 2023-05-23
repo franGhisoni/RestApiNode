@@ -16,7 +16,17 @@ router.post('/v1/register', async (req, res) => {
     const user = data.find((contact) => contact.email === email);
 
   if (!user) { // si no existe lo creamos
-        sdk.createContact({ name: nombre, email: email, mobile: mobile, note: password })
+        sdk.createContact(
+            { 
+                name: nombre, 
+                email: email, 
+                mobile: mobile,
+                socialNetworks:
+                {
+                    website: password
+                }
+            }
+            )
             .then(({ data }) => {
                 console.log(data);
                 res.status(201).send('Contacto creado con exito👌👍');

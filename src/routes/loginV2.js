@@ -12,7 +12,12 @@ router.get('/v2/login', async (req, res) => {
     let { data } = await sdk.listContacts();
   
     // Buscar el contacto que coincide con el correo electrónico y la contraseña proporcionados
-    const user = data.find((contact) => contact.email === email && contact.notes[0].description === password);
+    const user = data.find((contact) => contact.email === email && String(contact.socialNetworks.website) === String(password) );
+    console.log("user.socialNetworks.website")
+    console.log(String(user.socialNetworks.website))
+    console.log("password")
+    console.log( String(password))
+    
     if (!user) {
       res.status(401).send({ error: 'Credenciales inválidas' });
       return;
@@ -28,7 +33,7 @@ router.get('/v2/login', async (req, res) => {
 
         for (const factura of JSON.parse(data)) {
           listaProductos.push(factura); // Agregar cada producto a la lista
-
+          
           if (factura.contact === user.id) {
             factura.products.forEach((product) => {
               if (product.serviceId) {
@@ -51,7 +56,7 @@ router.get('/v2/login', async (req, res) => {
         userDTO["mobile"]= user.mobile;
         userDTO["id"]= user.id;
         userDTO["productos"]= productsOwn;
-        userDTO['password']=user.notes[0].description
+        userDTO['password']=String(user.socialNetworks.website)
         userDTO['servicios']=servicesOwn;
 
         console.log("user DTO:")
