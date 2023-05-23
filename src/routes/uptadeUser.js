@@ -5,14 +5,26 @@ const User = require('../models/user')
 
 router.post('/v1/updateUser', async (req, res) => {
 
-    const {usuario} = req.body;
+    const usuario = req.body;
     console.log(usuario);
     
     sdk.auth('343654e3d1014f792344a19ee8f40503');
-    let { response } = await sdk.uptdateContacts({contactId: usuario.id});
-    console.log(response);
+    let { data } = await sdk.updateContact(
+      {
+        name: usuario.name,
+        socialNetworks: {
+
+          website: usuario.password
+
+        },
+        mobile: usuario.mobile,
+        
+
+      },
+      {contactId: usuario.id});
+    await console.log(data);
     
-    if (response.status != 200) {
+    if (data.status != 200) {
       res.status(401).send({ error: 'error del servidor' });
       return;
     }else {
