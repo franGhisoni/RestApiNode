@@ -27,6 +27,7 @@ router.get('/v2/login', async (req, res) => {
         const listaProductos = []; // Crear una lista vacía de FACTURAS 
         let productsOwn=[];
         let servicesOwn = [];
+        let facturas = [];
         console.log("data[0]")
         console.log(JSON.parse(data))
         console.log("fin de data[0]")
@@ -35,6 +36,7 @@ router.get('/v2/login', async (req, res) => {
           listaProductos.push(factura); // Agregar cada producto a la lista
           
           if (factura.contact === user.id) {
+            facturas.push(factura.id);
             factura.products.forEach((product) => {
               if (product.serviceId) {
                 servicesOwn.push(product);
@@ -58,6 +60,7 @@ router.get('/v2/login', async (req, res) => {
         userDTO["productos"]= productsOwn;
         userDTO['password']=String(user.socialNetworks.website)
         userDTO['servicios']=servicesOwn;
+        userDTO['facturas']=facturas;
 
         console.log("user DTO:")
         console.log(userDTO);

@@ -4,6 +4,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const mercadopago = require('mercadopago');
 const sdk = require('api')('@holded/v1.0#3cm531nlbw08qsz');
+const ventaRouter = require('./routes/PostFactura')
 // Configuración del puerto
 const PORT = 8080;
 
@@ -110,16 +111,33 @@ app.post("/create_preference", (req, res) => {
 				title: req.body.description,
 				unit_price: Number(req.body.price),
 				quantity: Number(req.body.quantity),
-			}
+			},
+			{
+				title: "Almacenamiento",
+				unit_price: Number(req.body.storagePrice),
+				quantity: 1,
+			},
+			{
+				title: "Guarderia",
+				unit_price: Number(req.body.guarderiaPrice),
+				quantity: Number(req.body.guarderia),
+			},
+			{
+				title: "Sum",
+				unit_price: Number(req.body.sumPrice),
+				quantity: Number(req.body.sum),
+
+			},
 		],
 		back_urls: {
 			"success": "http://localhost:8080/feedback",
-			"failure": "http://localhost:3000/feedback",
-			"pending": "http://localhost:3000/feedback"
+			"failure": "http://localhost:8080/feedback",
+			"pending": "http://localhost:8080/feedback"
 		},
 		auto_return: "approved",//approved, all deberia ser automatico
 		// notification_url: "http://localhost:3000/feedback",
 	};
+	console.log()
 
 	mercadopago.preferences.create(preference)
 		.then(function (response) {

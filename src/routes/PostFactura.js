@@ -36,10 +36,10 @@ router.post('/v1/venta', async (req, res) => {
         const fechaUnix = Math.floor(fechaActual.getTime() / 1000);
         
         let locker = null;
-        if(req.body.storage==="Grande"){
+        if(req.body.storage==="Almacenamiento L"){
             locker = "64662AB670EB6571F10A6942"
         }
-        else if(req.body.storage==="Mediano"){
+        else if(req.body.storage==="Almacenamiento M"){
             locker = "64662A98C275900011057387"
         }
         else{
