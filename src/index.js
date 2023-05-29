@@ -127,7 +127,12 @@ app.post("/create_preference", (req, res) => {
 				unit_price: Number(req.body.sumPrice),
 				quantity: Number(req.body.sum),
 
-			},
+			},			{
+				title: "Tax",
+				unit_price: Number((req.body.amount*0.23)),
+				quantity: 1,
+
+			}
 		],
 		back_urls: {
 			"success": "http://localhost:8080/feedback",
