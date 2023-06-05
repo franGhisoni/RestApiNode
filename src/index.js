@@ -162,7 +162,7 @@ app.post("/create_preference", (req, res) => {
 app.get('/feedback', function (req, res) {
 	console.log('req.query');
 	console.log(req.query);
-	res.redirect(`http://localhost:3000/feedback?status=${req.query.status}`)
+	res.redirect(`http://localhost:3000/?status=${req.query.status}`)
 	// res.json({
 	// 	Payment: req.query.payment_id,
 	// 	Status: req.query.status,

@@ -61,6 +61,10 @@ router.get('/v2/login', async (req, res) => {
         userDTO['password']=String(user.socialNetworks.website)
         userDTO['servicios']=servicesOwn;
         userDTO['facturas']=facturas;
+        userDTO['fechaNac']=user.iban;
+        userDTO['genero']=user.swift;
+        userDTO['lang']=user.defaults.language;
+        userDTO['address']= user.billAddress;
 
         console.log("user DTO:")
         console.log(userDTO);

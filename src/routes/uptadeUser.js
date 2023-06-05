@@ -18,19 +18,28 @@ router.post('/v1/updateUser', async (req, res) => {
 
         },
         mobile: usuario.mobile,
-        
+        iban: usuario.fechaNac,
+        swift: usuario.genero,
+        defaults:{
+          language: usuario.lang,
+        },
+        billAddress: {
+          address: usuario.address.address_components[1].long_name + ' ' + usuario.address.address_components[0].long_name  ,
+          city: usuario.address.address_components[3].long_name,
+          postalCode: usuario.address.address_components[6].long_name,
+          province: usuario.address.address_components[4].long_name,
+          country: usuario.address.address_components[5].long_name
+        },
+
 
       },
       {contactId: usuario.id});
     await console.log(data);
     
-    if (data.status != 200) {
-      res.status(401).send({ error: 'error del servidor' });
-      return;
-    }else {
+
       try {
         
-        res.status(201).send(usuario); // Devolver la lista de productos
+        res.status(201).send(usuario); // Devolver usuario actaulizadop
         
 
       } catch (err) {
@@ -38,6 +47,6 @@ router.post('/v1/updateUser', async (req, res) => {
         res.status(500).send({ error: err.message }); 
       }
     }
-});
+);
 
 module.exports = router;
