@@ -24,11 +24,12 @@ router.post('/v1/updateUser', async (req, res) => {
           language: usuario.lang,
         },
         billAddress: {
-          address: usuario.address.address_components[1].long_name + ' ' + usuario.address.address_components[0].long_name  ,
-          city: usuario.address.address_components[3].long_name,
-          postalCode: usuario.address.address_components[6].long_name,
-          province: usuario.address.address_components[4].long_name,
-          country: usuario.address.address_components[5].long_name
+          address: usuario.address.address_components && usuario.address.address_components[1] ? usuario.address.address_components[1].long_name + ' ' + usuario.address.address_components[0].long_name : usuario.address.address,
+          city: usuario.address.address_components && usuario.address.address_components[3] ? usuario.address.address_components[3].long_name : usuario.address.city,
+          postalCode: usuario.address.address_components && usuario.address.address_components[6] ? usuario.address.address_components[6].long_name : usuario.address.postalCode,
+          province: usuario.address.address_components && usuario.address.address_components[4] ? usuario.address.address_components[4].long_name : usuario.address.province,
+          country: usuario.address.address_components && usuario.address.address_components[5] ? usuario.address.address_components[5].long_name : usuario.address.country
+          
         },
 
 
@@ -50,3 +51,11 @@ router.post('/v1/updateUser', async (req, res) => {
 );
 
 module.exports = router;
+
+// billAddress: {
+//   address: usuario.address.address_components[1].long_name + ' ' + usuario.address.address_components[0].long_name  ,
+//   city: usuario.address.address_components[3].long_name,
+//   postalCode: usuario.address.address_components[6].long_name,
+//   province: usuario.address.address_components[4].long_name,
+//   country: usuario.address.address_components[5].long_name
+// },
