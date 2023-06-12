@@ -109,9 +109,9 @@ app.post("/create_preference", (req, res) => {
 			}
 		],
 		back_urls: {
-			"success": "http://localhost:8080/feedback",
-			"failure": "http://localhost:8080/feedback",
-			"pending": "http://localhost:8080/feedback"
+			"success": "restapinode-production.up.railway.app/feedback",
+			"failure": "restapinode-production.up.railway.app/feedback",
+			"pending": "restapinode-production.up.railway.app/feedback"
 		},
 		auto_return: "approved",//approved, all deberia ser automatico
 		// notification_url: "http://localhost:3000/feedback",
@@ -136,7 +136,7 @@ app.post("/create_preference", (req, res) => {
 app.get('/feedback', function (req, res) {
 	console.log('req.query');
 	console.log(req.query);
-	res.redirect(`http://localhost:3000/?status=${req.query.status}`)
+	res.redirect(`https://assetdeploy-production.up.railway.app/?status=${req.query.status}`)
 	// res.json({
 	// 	Payment: req.query.payment_id,
 	// 	Status: req.query.status,
