@@ -88,36 +88,7 @@ app.post("/create_preference", (req, res) => {
 		unit_price: Number(req.body.price),
 		quantity: Number(req.body.quantity),
 	});
-	//almacenamiento
-	items.push({
-		title: "Almacenamiento",
-		unit_price: Number(req.body.storagePrice),
-		quantity: 1,
-	})
-	//guarderia
-	if(req.body.guarderia>0){
-	items.push({
-		title: "Guarderia",
-		unit_price: Number(req.body.guarderiaPrice),
-		quantity: Number(req.body.guarderia),
-	});}
-	//sum
-	if(req.body.sum>0){
-		items.push({
-			title: "Sum",
-			unit_price: Number(req.body.sumPrice),
-			quantity: Number(req.body.sum),
 
-		})
-	}
-	//coWorking
-	if(req.body.cw>0){
-		items.push({
-			title: "CoWorking",
-			unit_price: Number(req.body.cwPrice),
-			quantity: Number(req.body.cw),
-		})
-	}
 
 	//tax
 	items.push({
