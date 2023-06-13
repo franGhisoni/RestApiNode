@@ -79,44 +79,66 @@ app.post("/create_preference", (req, res) => {
     console.log(req.body);
     console.log('req.body stringify\n\n\n');
     console.log(JSON.stringify(req.body));
+	let items= [];
+
+
+	//lote
+	items.push({
+		title: req.body.description,
+		unit_price: Number(req.body.price),
+		quantity: Number(req.body.quantity),
+	});
+	//almacenamiento
+	items.push({
+		title: "Almacenamiento",
+		unit_price: Number(req.body.storagePrice),
+		quantity: 1,
+	})
+	//guarderia
+	if(req.body.guarderia>0){
+	items.push({
+		title: "Guarderia",
+		unit_price: Number(req.body.guarderiaPrice),
+		quantity: Number(req.body.guarderia),
+	});}
+	//sum
+	if(req.body.sum>0){
+		items.push({
+			title: "Sum",
+			unit_price: Number(req.body.sumPrice),
+			quantity: Number(req.body.sum),
+
+		})
+	}
+	//coWorking
+	if(req.body.cw>0){
+		items.push({
+			title: "CoWorking",
+			unit_price: Number(req.body.cwPrice),
+			quantity: Number(req.body.cw),
+		})
+	}
+
+	//tax
+	items.push({
+		title: "Tax",
+		unit_price: Number((req.body.amount*0.21)),
+		quantity: 1,
+
+	})
+
 	let preference = {
-		items: [
-			{
-				title: req.body.description,
-				unit_price: Number(req.body.price),
-				quantity: Number(req.body.quantity),
-			},
-			{
-				title: "Almacenamiento",
-				unit_price: Number(req.body.storagePrice),
-				quantity: 1,
-			},
-			{
-				title: "Guarderia",
-				unit_price: Number(req.body.guarderiaPrice),
-				quantity: Number(req.body.guarderia),
-			},
-			{
-				title: "Sum",
-				unit_price: Number(req.body.sumPrice),
-				quantity: Number(req.body.sum),
-
-			},			{
-				title: "Tax",
-				unit_price: Number((req.body.amount*0.23)),
-				quantity: 1,
-
-			}
-		],
+		items: items,
 		back_urls: {
-			"success": "restapinode-production.up.railway.app/feedback",
-			"failure": "restapinode-production.up.railway.app/feedback",
-			"pending": "restapinode-production.up.railway.app/feedback"
+			"success": "http://localhost:8080/feedback",
+			"failure": "http://localhost:8080/feedback",
+			"pending": "http://localhost:8080/feedback"
 		},
 		auto_return: "approved",//approved, all deberia ser automatico
 		// notification_url: "http://localhost:3000/feedback",
 	};
-	console.log()
+	console.log(preference)
+
 
 	mercadopago.preferences.create(preference)
 		.then(function (response) {
@@ -136,7 +158,7 @@ app.post("/create_preference", (req, res) => {
 app.get('/feedback', function (req, res) {
 	console.log('req.query');
 	console.log(req.query);
-	res.redirect(`https://assetdeploy-production.up.railway.app/?status=${req.query.status}`)
+	res.redirect(`http://localhost:3000/?status=${req.query.status}`)
 	// res.json({
 	// 	Payment: req.query.payment_id,
 	// 	Status: req.query.status,

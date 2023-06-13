@@ -47,7 +47,7 @@ router.post('/v1/venta', async (req, res) => {
         }
         
 
-
+        let factura = {};
         sdk.createDocument({
             items: [
                 {
@@ -67,18 +67,43 @@ router.post('/v1/venta', async (req, res) => {
                 },
                 {
                     serviceId:"646629D3E5CA046AA701BA42", //COWORKING
-                    units: 0,
+                    units: req.body.cw,
                 }
             ],
             applyContactDefaults: true,
             contactId: req.body.user.id,
             date: fechaUnix,
-          }, {docType: 'invoice'}).then(({ data }) => console.log(data)).catch(err => console.error(err));
+        }, {docType: 'invoice'}).then(({ data }) => {
+            console.log(data);
+            factura = data;
+            console.log('factura desde create document', factura)
+            console.log("aca empieza el pago. req body",req.body.amount);
+            console.log("document id",factura.id);
+            console.log('factura desde pay Document', factura)
+    
+            //aca iria el if para ver si pago en efectivo o algo asi
+            sdk.payDocument(
+                {
+                date: fechaUnix, 
+                amount: req.body.amount*1.23}, 
+                {
+                docType: 'invoice',
+                documentId: factura.id
+              }
+              )
+                .then(({ data }) => console.log(data))
+                .catch(err => console.error(err));
+        
+        }).catch(err => console.error(err));
 
         res.status(201).json({titulo : 'Post Facturas con exito👌👍'});
+
+
     // res.send(user.getUser);
     // console.log("se ejecuto postfact")
     // console.log(user.getUser.email);
+
+
 }
     else{
         res.status(400).send({ error: 'faltan datos requeridos' });
