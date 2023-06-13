@@ -85,7 +85,7 @@ router.post('/v1/venta', async (req, res) => {
             sdk.payDocument(
                 {
                 date: fechaUnix, 
-                amount: req.body.amount*1.23}, 
+                amount: req.body.amount*1.21}, 
                 {
                 docType: 'invoice',
                 documentId: factura.id
