@@ -9,7 +9,9 @@ const ventaRouter = require('./routes/PostFactura')
 const PORT = 8080;
 require('dotenv').config();
 
-
+const PaymentController = require("./Controllers/PaymentController");
+const PaymentService = require("./Services/PaymentService");
+const PaymentInstance = new PaymentController(new PaymentService());
 
 
 
@@ -42,6 +44,7 @@ app.use(require('./routes/getAllServicio'));
 app.use(require('./routes/getAllFacturas'));
 app.use(require('./routes/uptadeUser'));
 app.use(require('./routes/getFacturaPDF'));
+app.use(require('./routes/getDolar'));
 
 //starting
 const server = app.listen(PORT, () => {
@@ -74,6 +77,7 @@ let userId;
 let date;
 let products= [];
 let payment_id;
+
 app.post("/create_preference", (req, res) => {
 	
     console.log(req.body);
@@ -83,10 +87,15 @@ app.post("/create_preference", (req, res) => {
 
 
 	//lote
+	// items.push({
+	// 	title: req.body.description,
+	// 	unit_price: Number(req.body.price),
+	// 	quantity: Number(req.body.quantity),
+	// });
 	items.push({
 		title: req.body.description,
-		unit_price: Number(req.body.price),
-		quantity: Number(req.body.quantity),
+		unit_price: Number(req.body.amount),
+		quantity: 1,
 	});
 
 
@@ -141,4 +150,12 @@ app.get('/feedback', function (req, res) {
 
 });
 
+//preparado para un futuro refactor de pagos  y aplicar mejor mvc
+app.get("/payment", (req, res) => {
+	PaymentInstance.getPaymentLink(req, res);
+});
 
+app.get("/subscription", (req, res) => {
+
+	PaymentInstance.getSubscriptionLink(req,res);
+});
