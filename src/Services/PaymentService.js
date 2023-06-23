@@ -8,10 +8,10 @@ class PaymentService {
 
 
 	//lote
-	items.push({
+    items.push({
 		title: req.body.description,
-		unit_price: Number(req.body.price),
-		quantity: Number(req.body.quantity),
+		unit_price: Number(req.body.amount),
+		quantity: 1,
 	});
 
 
@@ -23,7 +23,7 @@ class PaymentService {
 
 	})
 
-    let preference = {
+	let preference = {
 		items: items,
 		back_urls: {
 			"success": "http://localhost:8080/feedback",

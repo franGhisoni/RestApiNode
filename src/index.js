@@ -13,6 +13,10 @@ const PaymentController = require("./Controllers/PaymentController");
 const PaymentService = require("./Services/PaymentService");
 const PaymentInstance = new PaymentController(new PaymentService());
 
+const FunnelController = require("./Controllers/FunnelController");
+const FunnelService = require("./Services/FunnelService");
+const FunnelInstance = new FunnelController(new FunnelService());
+
 
 
 const path = require('path');
@@ -83,6 +87,9 @@ app.post("/create_preference", (req, res) => {
     console.log(req.body);
     console.log('req.body stringify\n\n\n');
     console.log(JSON.stringify(req.body));
+    console.log('\n\n\nreq.body stringify FIN\n\n\n');
+
+
 	let items= [];
 
 
@@ -151,7 +158,7 @@ app.get('/feedback', function (req, res) {
 });
 
 //preparado para un futuro refactor de pagos  y aplicar mejor mvc
-app.get("/payment", (req, res) => {
+app.post("/payment", (req, res) => {
 	PaymentInstance.getPaymentLink(req, res);
 });
 
@@ -159,3 +166,9 @@ app.get("/subscription", (req, res) => {
 
 	PaymentInstance.getSubscriptionLink(req,res);
 });
+
+app.post("/funnelSub", (req,res) => {
+	// suscribe un usuario a un funnel especifico en una etapa especifica
+	// si el usuario ya existe y la etapa es distina (despeus) lo movera
+	FunnelInstance.postUser(req,res);
+})

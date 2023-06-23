@@ -56,18 +56,22 @@ router.post('/v1/venta', async (req, res) => {
                 {
                     serviceId: locker,
                     units:1,
+                    subtotal: 0
                 },
                 {
                     serviceId:"645D044E23E518E60F0135A3", //SUM
                     units: req.body.sum,
+                    subtotal: 0
                 },
                 {
                     serviceId:"64662B54CA7D9D6A830593AE", //KINDER
                     units: req.body.guarderia,
+                    subtotal: 0
                 },
                 {
                     serviceId:"646629D3E5CA046AA701BA42", //COWORKING
                     units: req.body.cw,
+                    subtotal: 0
                 }
             ],
             applyContactDefaults: true,
