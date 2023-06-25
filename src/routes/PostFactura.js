@@ -80,9 +80,9 @@ router.post('/v1/venta', async (req, res) => {
                 },
                 {
                     "pago N":"1/12",
-                    "Fecha": Date().toLocaleDateString(),
+                    "Fecha":new Date().toLocaleDateString(),
                     "Valor dolar": numeral(req.body.dolarValue).format('0,0.00'), 
-                    "Pago en pesos": `ARS$${numeral(req.body.amount*1.21).format('0.0,00')}`
+                    "Pago en pesos": `ARS$${numeral(req.body.amount*1.21).format('0.0,0')}`
                     },
             ],
             applyContactDefaults: true,

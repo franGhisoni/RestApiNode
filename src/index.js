@@ -167,6 +167,15 @@ app.get("/subscription", (req, res) => {
 	PaymentInstance.getSubscriptionLink(req,res);
 });
 
+app.get("/v1/getDatosFactura",(req,res) => {
+	PaymentInstance.getDatosFactura(req,res);
+});
+
+app.post("/v1/payInvoice",(req,res) => {
+	PaymentInstance.payInvoice(req,res);
+	// PaymentInstance.updateInvoice(req,res);
+})
+
 app.post("/funnelSub", (req,res) => {
 	// suscribe un usuario a un funnel especifico en una etapa especifica
 	// si el usuario ya existe y la etapa es distina (despeus) lo movera

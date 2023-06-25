@@ -1,11 +1,11 @@
 class PaymentController {
-    constructor(subscriptionService) {
-        this.subscriptionService = subscriptionService;
+    constructor(paymentServcice) {
+        this.paymentServcice = paymentServcice;
     }
 
     async getPaymentLink(req, res) {
         try{
-            const payment = await this.subscriptionService.createPayment(req);
+            const payment = await this.paymentServcice.createPayment(req);
 
             return res.json(payment); 
         } catch(error) {
@@ -22,7 +22,7 @@ class PaymentController {
     
     async getSubscriptionLink(req, res) {
         try{
-            const subscription = await this.subscriptionService.createSubscription();
+            const subscription = await this.paymentServcice.createSubscription();
 
             return res.json(subscription);
         }catch(error) {
@@ -37,6 +37,56 @@ class PaymentController {
         }
     }
 
+
+    async getDatosFactura(req, res) {
+        try{
+            const factura = await this.paymentServcice.getFactura(req);
+
+            return res.json(factura);
+        }catch(error) {
+            console.log(" 📄🤖BIP BOP error en la obtencion de factura", error);
+            
+            return  res.status(500).json(
+                {
+                    error: true,
+                    message: "📄🤖BIP BOP error en la obtencion de factura",
+                    info: "☆*: .｡. o(≧▽≦)o .｡.:*☆"
+                }
+            )
+        }
+    }
+
+    async payInvoice(req, res) {
+        try {
+        const factura = await this.paymentServcice.payInvoice(req);
     
+        return res.json(factura);
+        } catch (error) {
+        console.log("📄🤖BIP BOP error al agregar el pago", error);
+    
+        return res.status(500).json({
+            error: true,
+            message: "📄🤖BIP BOP error al pagar",
+            info: "☆*: .｡. o(≧▽≦)o .｡.:*☆"
+        });
+        }
+    }
+    
+    async updateInvoice(req, res) {
+        try {
+        const factura = await this.paymentServcice.updateInvoice(req);
+    
+        return res.json(factura);
+        } catch (error) {
+        console.log("📄🤖BIP BOP error al actualizar", error);
+    
+        return res.status(500).json({
+            error: true,
+            message: "📄🤖BIP BOP error al actualizar",
+            info: "pago realizado pero no impactado"
+        });
+        }
+    }
+
 }
 module.exports = PaymentController;
