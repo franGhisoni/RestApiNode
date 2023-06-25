@@ -2,7 +2,7 @@ const { Router } = require('express');
 const router= Router();
 const sdk = require('api')('@holded/v1.0#3cm531nlbw08qsz');
 const user = require("./loginV2");
-
+const numeral = require('numeral');
 
 
 router.post('/v1/venta', async (req, res) => {
@@ -74,6 +74,17 @@ router.post('/v1/venta', async (req, res) => {
                     subtotal: 0
                 }
             ],
+            customFields: [
+                {
+                    "Financiacion": "70/30",
+                },
+                {
+                    "pago N":"1/12",
+                    "Fecha": Date().toLocaleDateString(),
+                    "Valor dolar": numeral(req.body.dolarValue).format('0,0.00'), 
+                    "Pago en pesos": `ARS$${numeral(req.body.amount*1.21).format('0.0,00')}`
+                    },
+            ],
             applyContactDefaults: true,
             contactId: req.body.user.id,
             date: fechaUnix,
@@ -81,7 +92,7 @@ router.post('/v1/venta', async (req, res) => {
             console.log(data);
             factura = data;
             console.log('factura desde create document', factura)
-            console.log("aca empieza el pago. req body",req.body.amount);
+            console.log("aca empieza el pago. req body",req.body);
             console.log("document id",factura.id);
             console.log('factura desde pay Document', factura)
     
@@ -89,12 +100,12 @@ router.post('/v1/venta', async (req, res) => {
             sdk.payDocument(
                 {
                 date: fechaUnix, 
-                amount: req.body.amount*1.21}, 
+                amount: (req.body.amount*1.21)/req.body.dolarValue}, 
                 {
                 docType: 'invoice',
                 documentId: factura.id
-              }
-              )
+                }
+            )
                 .then(({ data }) => console.log(data))
                 .catch(err => console.error(err));
         
