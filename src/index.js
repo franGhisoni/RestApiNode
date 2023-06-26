@@ -117,9 +117,9 @@ app.post("/create_preference", (req, res) => {
 	let preference = {
 		items: items,
 		back_urls: {
-			"success": "restapinode-production.up.railway.app/feedback",
-			"failure": "restapinode-production.up.railway.app/feedback",
-			"pending": "restapinode-production.up.railway.app/feedback"
+			"success": "grupo-asset.com/feedback",
+			"failure": "grupo-asset.com/feedback",
+			"pending": "grupo-asset.com/feedback"
 		},
 		auto_return: "approved",//approved, all deberia ser automatico
 		// notification_url: "http://localhost:3000/feedback",
