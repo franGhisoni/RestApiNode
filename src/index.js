@@ -147,14 +147,6 @@ app.get('/feedback', function (req, res) {
 	console.log(req.query);
 	res.redirect(`https://grupo-asset.com/?status=${req.query.status}`)
 
-	// res.json({
-	// 	Payment: req.query.payment_id,
-	// 	Status: req.query.status,
-	// 	MerchantOrder: req.query.merchant_order_id
-	// });
-	//IMPACTO CON HOLDED
-	sdk.auth('c1e86f21bcc5fdedc6c36bd30cb5b596');
-
 
 });
 
