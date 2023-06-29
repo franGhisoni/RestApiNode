@@ -30,7 +30,7 @@ router.get('/v2/login', async (req, res) => {
         listaProductos.push(factura); // Agregar cada producto a la lista
 
         if (factura.contact === user.id) {
-          facturas.push(factura.id);
+          facturas.push(factura);
           factura.products.forEach((product) => {
             if (product.serviceId) {
               servicesOwn.push(product);
