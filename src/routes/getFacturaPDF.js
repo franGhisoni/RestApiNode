@@ -4,8 +4,9 @@ const sdk = require('api')('@holded/v1.0#3cm531nlbw08qsz');
 
 router.get('/v1/getFacturaPDF', async (req, res) => {
     try {
+        console.log(req.query);
         sdk.auth('c1e86f21bcc5fdedc6c36bd30cb5b596');
-        const { data } = await sdk.getDocumentPDF({ docType: 'invoice', documentId: req.query.id });
+        const { data } = await sdk.getDocumentPDF({ docType: req.query.doctype, documentId: req.query.id });
 
         if (!data) {
             return res.status(404).send('No se encontró la factura');

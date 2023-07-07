@@ -88,6 +88,7 @@ router.post('/v1/venta', async (req, res) => {
             applyContactDefaults: true,
             contactId: req.body.user.id,
             date: fechaUnix,
+            dueDate:2*fechaUnix
         }, {docType: 'invoice'}).then(({ data }) => {
             console.log(data);
             factura = data;
@@ -109,7 +110,50 @@ router.post('/v1/venta', async (req, res) => {
                 .then(({ data }) => console.log(data))
                 .catch(err => console.error(err));
         
-        }).catch(err => console.error(err));
+        }).catch(err => console.error(err)).then(
+            ()=> sdk.createDocument({
+                items: [
+                    {
+                        sku: req.body.sku
+                    },
+                    {
+                        serviceId: locker,
+                        units:1,
+                        subtotal: 0
+                    },
+                    {
+                        serviceId:"645D044E23E518E60F0135A3", //SUM
+                        units: req.body.sum,
+                        subtotal: 0
+                    },
+                    {
+                        serviceId:"64662B54CA7D9D6A830593AE", //KINDER
+                        units: req.body.guarderia,
+                        subtotal: 0
+                    },
+                    {
+                        serviceId:"646629D3E5CA046AA701BA42", //COWORKING
+                        units: req.body.cw,
+                        subtotal: 0
+                    }
+                ],
+                customFields: [
+                    {
+                        "Financiacion": "70/30",
+                    },
+                    {
+                        "pago N":"1/12",
+                        "Fecha":new Date().toLocaleDateString(),
+                        "Valor dolar": numeral(req.body.dolarValue).format('0,0.00'), 
+                        "Pago en pesos": `ARS$${numeral(req.body.amount*1.21).format('0.0,0')}`
+                        },
+                ],
+                applyContactDefaults: true,
+                contactId: req.body.user.id,
+                date: fechaUnix,
+            }, {docType: 'purchaseorder'})
+
+        );
 
         res.status(201).json({titulo : 'Post Facturas con exito👌👍'});
 
