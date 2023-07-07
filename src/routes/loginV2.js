@@ -25,7 +25,7 @@ router.get('/v2/login', async (req, res) => {
       let productsOwn = [];
       let servicesOwn = [];
       let facturas = [];
-
+      let ordenesCompras = [];
       for (const factura of JSON.parse(data)) {
         listaProductos.push(factura); // Agregar cada producto a la lista
 
@@ -37,7 +37,16 @@ router.get('/v2/login', async (req, res) => {
             } else {
               productsOwn.push(product.name);
             }
-          });
+          })
+              
+            ordenesCompras = await sdk.listDocuments({docType: 'purchaseorder'}).then( listPurchaseOrders => {
+              console.log('then: \n\n',JSON.parse(listPurchaseOrders.data).filter(purchaseOrden => purchaseOrden.contact === user.id), '\n\n\n');
+              return JSON.parse(listPurchaseOrders.data).filter(purchaseOrden => purchaseOrden.contact === user.id)
+              //.map(purchaseOrden => purchaseOrden.id);  
+              //  podes descomentar eso si queres solo el id
+            });
+              
+          
         }
       }
 
@@ -50,6 +59,7 @@ router.get('/v2/login', async (req, res) => {
         password: String(user.socialNetworks?.website),
         servicios: servicesOwn,
         facturas: facturas,
+        ordenesCompra: ordenesCompras,
         fechaNac: user.iban,
         genero: user.swift,
         lang: user.defaults.language,
