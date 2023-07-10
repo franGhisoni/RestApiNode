@@ -37,7 +37,7 @@ app.use(cors());
 //routes
 app.use(require('./routes/test'));
 //POST
-app.use(require('./routes/PostFactura'));
+app.use(require('./routes/PostFactura'));//v1/venta
 app.use(require('./routes/Register'));
 //GET
 app.use(require('./routes/getAll'));//contactos
