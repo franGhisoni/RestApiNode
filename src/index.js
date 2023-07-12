@@ -6,7 +6,7 @@ const mercadopago = require('mercadopago');
 const sdk = require('api')('@holded/v1.0#3cm531nlbw08qsz');
 const ventaRouter = require('./routes/PostFactura')
 // Configuración del puerto
-const PORT = 8080 || 3000;
+const PORT = process.env.PORT || 3000;
 require('dotenv').config();
 
 const PaymentController = require("./Controllers/PaymentController");
