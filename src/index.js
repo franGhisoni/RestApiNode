@@ -6,7 +6,7 @@ const mercadopago = require('mercadopago');
 const sdk = require('api')('@holded/v1.0#3cm531nlbw08qsz');
 const ventaRouter = require('./routes/PostFactura')
 // Configuración del puerto
-const PORT = 8080;
+const PORT = 8080 || 3000;
 require('dotenv').config();
 
 const PaymentController = require("./Controllers/PaymentController");
@@ -51,7 +51,7 @@ app.use(require('./routes/getFacturaPDF'));
 app.use(require('./routes/getDolar'));
 
 //starting
-const server = app.listen(3000,"0.0.0.0", () => {
+const server = app.listen(PORT,"0.0.0.0", () => {
     console.log(`Server listening on port ${PORT}`);
 });
 
