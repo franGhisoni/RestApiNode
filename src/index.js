@@ -50,7 +50,7 @@ app.use(require('./routes/getFacturaPDF'));
 app.use(require('./routes/getDolar'));
 
 //starting
-const PORT = process.env.PORT || 3000;
+const PORT = 8080;
 const server = app.listen(PORT,"0.0.0.0", () => {
     console.log(`Server listening on port ${PORT}`);
 });
