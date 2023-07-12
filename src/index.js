@@ -50,19 +50,21 @@ app.use(require('./routes/getFacturaPDF'));
 app.use(require('./routes/getDolar'));
 
 //starting
-const PORT = 8080;
-const server = app.listen(PORT,"0.0.0.0", () => {
+
+// use PORT provided in enviroment or default to 3000
+const PORT = process.env.PORT || 3000;
+app.listen(PORT,"0.0.0.0", function()  {
     console.log(`Server listening on port ${PORT}`);
 });
 
-server.on('error', (error) => {
-    if (error.syscall !== 'listen') {
-        throw error;
-    }
+// server.on('error', (error) => {
+//     if (error.syscall !== 'listen') {
+//         throw error;
+//     }
 
-    console.log(`Port ${PORT} is already in use. Using next available port...`);
+//     console.log(`Port ${PORT} is already in use. Using next available port...`);
 
-});
+// });
 
 
 
