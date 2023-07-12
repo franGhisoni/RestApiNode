@@ -51,7 +51,7 @@ app.use(require('./routes/getFacturaPDF'));
 app.use(require('./routes/getDolar'));
 
 //starting
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT,"0.0.0.0", () => {
     console.log(`Server listening on port ${PORT}`);
 });
 // Manejo de error si el puerto ya está en uso
