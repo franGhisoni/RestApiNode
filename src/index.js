@@ -1,3 +1,4 @@
+let transfer= '';
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -5,6 +6,7 @@ const morgan = require('morgan');
 const mercadopago = require('mercadopago');
 const sdk = require('api')('@holded/v1.0#3cm531nlbw08qsz');
 const ventaRouter = require('./routes/PostFactura')
+const numeral = require('numeral');
 // Configuración del puerto
 const PORT = 8080;
 require('dotenv').config();
@@ -20,6 +22,7 @@ const FunnelInstance = new FunnelController(new FunnelService());
 
 
 const path = require('path');
+const { default: axios } = require('axios');
 const filePath = path.join(__dirname, 'index.html');
 app.get("/", function (req, res) {
 	res.status(200).sendFile(filePath);
@@ -81,9 +84,8 @@ let userId;
 let date;
 let products= [];
 let payment_id;
-
 app.post("/create_preference", (req, res) => {
-	
+	transfer = req.body.transfer
     console.log(req.body);
     console.log('req.body stringify\n\n\n');
     console.log(JSON.stringify(req.body));
@@ -117,9 +119,9 @@ app.post("/create_preference", (req, res) => {
 	let preference = {
 		items: items,
 		back_urls: {
-			"success": "http://localhost:8080/feedback",
-			"failure": "http://localhost:8080/feedback",
-			"pending": "http://localhost:8080/feedback"
+			"success": `http://localhost:8080/${req.body.backURL}`,
+			"failure": `http://localhost:8080/${req.body.backURL}`,
+			"pending": `http://localhost:8080/${req.body.backURL}`
 		},
 		auto_return: "approved",//approved, all deberia ser automatico
 		// notification_url: "http://localhost:3000/feedback",
@@ -142,9 +144,171 @@ app.post("/create_preference", (req, res) => {
 
 });
 
-app.get('/feedback', function (req, res) {
-	console.log('req.query');
+app.get('/feedback', async function (req, res) {
+	console.log('req.query desde /feedback');
 	console.log(req.query);
+	console.log('transfer:',transfer)
+	
+
+
+
+
+	sdk.auth('c1e86f21bcc5fdedc6c36bd30cb5b596');
+
+
+    
+    // const { data } = await sdk.listProducts();
+    
+    // const listaProductos = []; 
+
+    // for (const producto of data) {
+    //     listaProductos.push(producto); // Agregar cada producto a la lista
+    // }
+
+
+    const { data }  = await sdk.listServices();
+
+    const listaServicios= [];
+
+    for (const servicio of data) {
+        listaServicios.push(servicio); // Agregar cada producto a la lista
+    }
+
+
+    if(transfer){
+        console.log(transfer);
+
+        const fechaActual = new Date();
+        const fechaUnix = Math.floor(fechaActual.getTime() / 1000);
+        
+        let locker = null;
+        if(transfer.storage==="Almacenamiento L"){
+            locker = "64662AB670EB6571F10A6942"
+        }
+        else if(transfer.storage==="Almacenamiento M"){
+            locker = "64662A98C275900011057387"
+        }
+        else{
+            locker = "64662A7C6B56EB8ADC009299"
+        }
+        
+
+        let factura = {};
+        sdk.createDocument({
+            items: [
+                {
+                    sku: transfer.sku
+                },
+                {
+                    serviceId: locker,
+                    units:1,
+                    subtotal: 0
+                },
+                {
+                    serviceId:"645D044E23E518E60F0135A3", //SUM
+                    units: transfer.sum,
+                    subtotal: 0
+                },
+                {
+                    serviceId:"64662B54CA7D9D6A830593AE", //KINDER
+                    units: transfer.guarderia,
+                    subtotal: 0
+                },
+                {
+                    serviceId:"646629D3E5CA046AA701BA42", //COWORKING
+                    units: transfer.cw,
+                    subtotal: 0
+                }
+            ],
+            customFields: [
+                {
+                    "Financiacion": "70/30",
+                },
+                {
+                    "pago N":"1/12",
+                    "Fecha":new Date().toLocaleDateString(),
+                    "Valor dolar": numeral(transfer.dolarValue).format('0,0.00'), 
+                    "Pago en pesos": `ARS$${numeral(transfer.amount*1.21).format('0.0,0')}`
+                    },
+            ],
+            applyContactDefaults: true,
+            contactId: transfer.user.id,
+            date: fechaUnix,
+            dueDate:2*fechaUnix
+        }, {docType: 'invoice'}).then(({ data }) => {
+            console.log(data);
+            factura = data;
+            console.log('factura desde create document', factura)
+            console.log("aca empieza el pago. req body",transfer);
+            console.log("document id",factura.id);
+            console.log('factura desde pay Document', factura)
+    
+            //aca iria el if para ver si pago en efectivo o algo asi
+            sdk.payDocument(
+                {
+                date: fechaUnix, 
+                amount: (transfer.amount*1.21)/transfer.dolarValue}, 
+                {
+                docType: 'invoice',
+                documentId: factura.id
+                }
+            )
+                .then(({ data }) => console.log(data))
+                .catch(err => console.error(err));
+        
+        }).catch(err => console.error(err)).then(
+            ()=> sdk.createDocument({
+                items: [
+                    {
+                        sku: transfer.sku
+                    },
+                    {
+                        serviceId: locker,
+                        units:1,
+                        subtotal: 0
+                    },
+                    {
+                        serviceId:"645D044E23E518E60F0135A3", //SUM
+                        units: transfer.sum,
+                        subtotal: 0
+                    },
+                    {
+                        serviceId:"64662B54CA7D9D6A830593AE", //KINDER
+                        units: transfer.guarderia,
+                        subtotal: 0
+                    },
+                    {
+                        serviceId:"646629D3E5CA046AA701BA42", //COWORKING
+                        units: transfer.cw,
+                        subtotal: 0
+                    }
+                ],
+                customFields: [
+                    {
+                        "Financiacion": "70/30",
+                    },
+                    {
+                        "pago N":"1/12",
+                        "Fecha":new Date().toLocaleDateString(),
+                        "Valor dolar": numeral(transfer.dolarValue).format('0,0.00'), 
+                        "Pago en pesos": `ARS$${numeral(transfer.amount*1.21).format('0.0,0')}`
+                        },
+                ],
+                applyContactDefaults: true,
+                contactId: transfer.user.id,
+                date: fechaUnix,
+            }, {docType: 'purchaseorder'})
+
+        );}
+
+
+
+
+
+
+
+
+	
 	res.redirect(`http://localhost:3000/?status=${req.query.status}`)
 	// res.json({
 	// 	Payment: req.query.payment_id,
@@ -159,6 +323,8 @@ app.get('/feedback', function (req, res) {
 
 //preparado para un futuro refactor de pagos  y aplicar mejor mvc
 app.post("/payment", (req, res) => {
+	transfer = req.body
+	console.log("req.body /payment:",req.body)
 	PaymentInstance.getPaymentLink(req, res);
 });
 
