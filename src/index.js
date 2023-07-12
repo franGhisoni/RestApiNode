@@ -51,25 +51,22 @@ app.use(require('./routes/getFacturaPDF'));
 app.use(require('./routes/getDolar'));
 
 //starting
-const server = app.listen(PORT,"0.0.0.0", () => {
+const server = app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server listening on port ${PORT}`);
-});
-// Manejo de error si el puerto ya está en uso
-server.on('error', (error) => {
+  });
+  
+  server.on('error', (error) => {
     if (error.syscall !== 'listen') {
-        throw error;
+      throw error;
     }
-
+  
     console.log(`Port ${PORT} is already in use. Using next available port...`);
-
-    // Iniciar el servidor en el puerto 3001
-    const nextServer = app.listen(3001, () => {
-        const nextPort = nextServer.address().port;
-        console.log(`Server listening on port ${nextPort}`);
+  
+    server.listen(3000, "0.0.0.0", () => {
+      console.log(`Server listening on port 3000`);
     });
-});
-
-
+  });
+  
 
 mercadopago.configure({
 	access_token: process.env.MP_API_KEY, //acces de prueba test user 1
